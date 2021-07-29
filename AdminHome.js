@@ -98,7 +98,7 @@ SOMDetpBAdmin
             $scope.selectedpersonCategoryInfo = [];
         };
         $scope.init();
-		//Set up validation checker for each components
+	//Set up validation checker for each components
         function isNullString(val) {
             if (typeof val === "undefined" || !val) {
                 return "";
@@ -121,7 +121,7 @@ SOMDetpBAdmin
                 return val;
             }
         };
-		//Clear person related containers for Reset
+	//Clear person related containers for Reset
         $scope.ResetToAddNewPerson = function ()
         {
             $scope.selectedPersonInfo = JSON.parse("{}");
@@ -132,7 +132,7 @@ SOMDetpBAdmin
         $scope.close = function () {
             $("#PersonInfo").modal("hide");
         }
-		//Search person related information by personId
+	//Search person related information by personId
         $scope.searchPerson = function (val) {
             $scope.showModal = !$scope.showModal; 
             var url = "Home.aspx/GetSelectedPersonInfo";
@@ -174,7 +174,7 @@ SOMDetpBAdmin
             //$scope.isDisabled = false;
             $scope.activetab = 2;
         };
-		//Search keyword within each record among all the retrieved dataset
+	//Search keyword within each record among all the retrieved dataset
         $scope.personfilter = personfilter;
         function personfilter(person) {
                 if ($scope.searchFilter.selectedCategory == 0 && $scope.searchFilter.IsFormer == 0) {
@@ -190,7 +190,7 @@ SOMDetpBAdmin
                     return person.statusId == $scope.searchFilter.selectedCategory && person.statusActive == 0;
                 }
         }
-		//Create new obj after hitting "Add" button
+	//Create new obj after hitting "Add" button
         $scope.addNewAddress = function () {
             $scope.personAddressIdList = [];
             for (var i = 0; i < $scope.selectedpersonAddressInfo.length; i++) {
@@ -206,7 +206,7 @@ SOMDetpBAdmin
             }
             $scope.selectedpersonCategoryInfo.push({});
         };
-		//Initial multi-select item in "Person Category" object.
+	//Initial multi-select item in "Person Category" object.
         $scope.PersonCategoryClinicInit = function (personCategoryInfo) {
             personCategoryInfo.ClinicLists = new Object();
             //$scope.selectedPersonCategoryClinicList[index] = new Object();
@@ -221,7 +221,7 @@ SOMDetpBAdmin
             }
 
         }
-		//Save all the person information and send to back through web service
+	//Save all the person information and send to back through web service
         $scope.SavePersonInfo = function () {
             var AddressPreferredChecker = 0;
 
@@ -315,7 +315,7 @@ SOMDetpBAdmin
             }
         };
         //Delete person by setting IsActive to 0
-		$scope.InactivePerson = function () {
+	$scope.InactivePerson = function () {
             if (confirm('Are you sure you want to delete?')) {
                 if ($scope.selectedPersonInfo.personid != null && $scope.selectedPersonInfo.personid != 0) {
                     var url = "Home.aspx/InactivePerson";
@@ -347,7 +347,7 @@ SOMDetpBAdmin
 
         };
         //Add restriction on "Person Category", so that user cannot choose same Person Category for same person, and set existing Person Category non-changable.
-		$scope.personCategoryfilter = function (index) {
+	$scope.personCategoryfilter = function (index) {
             return function (item) {
                 if ($scope.selectedpersonCategoryInfo[index].PersonCategoryCD != null) // if this item is not new added
                 {
@@ -358,7 +358,7 @@ SOMDetpBAdmin
                 }
             }
         }
-		//Add restriction on "Person Address", so that user cannot choose same Person Address for same person, and set existing Person Address non-changable.
+	//Add restriction on "Person Address", so that user cannot choose same Person Address for same person, and set existing Person Address non-changable.
         $scope.personAddressfilter = function (index) {
             return function (item) {
                 if ($scope.selectedpersonAddressInfo[index].AddressTypeId != null) // if this item is not new added

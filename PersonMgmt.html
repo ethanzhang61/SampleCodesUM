@@ -1,0 +1,553 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .column {
+            float: left;
+            padding: 10px;
+            width: 25%;
+        }
+
+        .columnLeft {
+            float: left;
+            width: 10%;
+            padding: 10px;
+            margin-left: 20px;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        img.bg {
+            width: 10%;
+        }
+        @media screen {
+            #printSection {
+                display: none;
+            }
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #printSection, #printSection * {
+                visibility: visible;
+            }
+
+            #printSection {
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h4>Person Management Page</h4>
+
+    <ul class="nav nav-tabs" role="tablist">
+        <li name="searchperson" ng-show="permission > 0" class="active"><a href data-target="#SearchPerson" data-toggle="tab">Search Person</a></li>
+        <!--<li ng-class='{"active": activetab==2 }' name="addperson" id="addperson" ng-click="changeToTab(2)" ng-show="permission >= 2"><a href data-target="#AddPerson" data-toggle="tab">Person Info</a></li>-->
+    </ul>
+    <!--<div ng-view></div>-->
+            <div ng-show="Searching" id="SearchingSpan" class="loadingSpin">
+                <div class="loading"></div> 
+                <div style="margin-left: 20px;"><strong>Searching............ </strong></div>
+            </div>
+    <div id="infoTab" class="tab-content" style="overflow: hidden;" ng-show="permission > 0">
+        <div id="SearchPerson" class=" tab-pane active in ">
+            HERE IS THE SEARCH PERSON BOX, IT WILL ADD IDX SEARCHING FACULTY IN FUTURE......
+            <div id="search" class="tab-pane  sumStyle" style="min-height: 200px;">
+                <fieldset class="fa-border row-fluid" style="margin: 5px; height: 200px; width: 80%;">
+                    <legend class=" fa-border"><strong>Search a person</strong></legend>
+                    <div class="row" style="border:1px solid;margin: 5px;">
+                        <div style="padding:10px;">
+                            <table id="filter" style="width:80%;">
+                                <tr>
+                                    <td style="width:10%;"><strong>Filter: </strong></td>
+                                    <td style="width:10%;">
+                                        By Category
+                                    </td>
+                                    <td style="width:80%;">
+                                        <div ng-repeat="item in personCategory track by $index" style="display:inline">
+                                            <input type="checkbox" ng-model="searchFilter.selectedCategory" ng-true-value="{{item.PersonCategoryCD}}" />&nbsp&nbsp{{item.PersonCategoryName}}&nbsp&nbsp
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        By Status
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" ng-model="searchFilter.IsFormer" />&nbsp&nbspIsFormer&nbsp&nbsp
+                                       </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <table style="margin: 5px 0px 0px 15px; padding: 10px;">
+                        <tr>
+                            <td>
+                                <b>Search: </b>
+                                <input type="text" name="Search" class="form-control text-small" ng-model="Search" />
+                            </td>
+                            <td>
+                                <b>Total: {{filterresult.length}}</b>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </div>
+            <div style="text-align: left;" ng-show="permission >= 2">
+                <button class="btn btn-warning" type="button" data-toggle="modal" data-target="#PersonInfo" ng-click="ResetToAddNewPerson()"><i class="icon-plus"></i>Add New Person</button>
+            </div>
+            <br />
+            HERE IS THE LIST OF ALL PERSONS IN THE LOGIN USER'S DEPARTMENT AS DEFAULT. THE LIST WILL BE CHANGED WHEN USER TO
+            SEARCH
+            <fieldset class="fa-border row-fluid " style="margin: 5px; height: 280px; width: auto;">
+                <legend class=" fa-border" style="width: 400px;"><strong>Persons in the deparment </strong></legend>
+                <table class="table-scroll" style="width:90%">
+                    <thead>
+                        <tr style="background-color: goldenrod">
+                            <th style="text-align: center; width: 3%" ng-show="permission >= 2">
+                                <a href="" ng-click="orderByField='PersonId'; reverseSort = !reverseSort">
+                                    Person ID
+                                </a>
+                            </th>
+                            <th style="text-align: center; width: 3%" ng-show="permission == 3">
+                                <a href="" ng-click="orderByField='FCMIndividualId'; reverseSort = !reverseSort">
+                                    FCM Individual ID
+                                </a>
+                            </th>
+                            <th style="text-align: center; width: 3%">
+                                <a href="" ng-click="orderByField='LastName'; reverseSort = !reverseSort">
+                                    Last Name
+                                </a>
+                            </th>
+                            <th style="text-align: center; width: 3%">
+                                <a href="" ng-click="orderByField='FirstName'; reverseSort = !reverseSort">
+                                    First Name
+                                </a>
+                            </th>
+                            <th style="text-align: center; width: 3%">
+                                <a href="" ng-click="orderByField='MiddleName'; reverseSort = !reverseSort">
+                                    Middle Name
+                                </a>
+                            </th>
+                            <th style="text-align: center; width: 3%">
+                                <a href="" ng-click="orderByField='Degree'; reverseSort = !reverseSort">
+                                    Degree
+                                </a>
+                            </th>
+                            <th style="text-align: center; width: 3%" ng-show="searchFilter.selectedCategory > 1 && searchFilter.selectedCategory <= 3 && searchFilter.IsFormer == 1">
+                                <a href="" ng-click="orderByField='YearGraduation'; reverseSort = !reverseSort">
+                                    Year Graduated
+                                </a>
+                            </th>
+                            <th style="text-align: center; width: 3%" ng-show="searchFilter.selectedCategory > 0 && searchFilter.selectedCategory <= 4 && searchFilter.IsFormer == 0">
+                                <a href="" ng-click="orderByField='Title'; reverseSort = !reverseSort">
+                                    Title
+                                </a>
+                            </th>
+                            <th style="text-align: center; width: 3%" ng-show="searchFilter.selectedCategory > 4 || searchFilter.IsFormer == 1">
+                                <a href="" ng-click="orderByField='City'; reverseSort = !reverseSort">
+                                    Preferred City
+                                </a>
+                            </th>
+                            <th style="text-align: center; width: 3%" ng-show="searchFilter.selectedCategory > 4 || searchFilter.IsFormer == 1">
+                                <a href="" ng-click="orderByField='State'; reverseSort = !reverseSort">
+                                    State
+                                </a>
+                            </th>
+                            <th style="text-align: center; width: 3%" ng-show="searchFilter.selectedCategory > 4 || searchFilter.IsFormer == 1">
+                                <a href="" ng-click="orderByField='IsDeceased'; reverseSort = !reverseSort">
+                                    Deceased
+                                </a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="body-half-screen">
+                        <tr ng-repeat="person in (filterresult = (PersonList | filter:personfilter | filter: Search | unique:'PersonId'))  | orderBy: orderByField: reverseSort">
+                            <th ng-show="permission >= 2">
+                                <!--<a href data-target="#AddPerson" data-toggle="tab" ng-click="searchPerson(person.PersonId)" ng-hide="permission < 2">{{person.PersonId}}</a>-->
+                                <a href data-toggle="modal" data-target="#PersonInfo" ng-click="searchPerson(person.PersonId)">{{person.PersonId}}</a>
+                            </th>
+                            <th ng-show="permission == 3">
+                                {{person.FCMIndividualId}}
+                            </th>
+                            <th>
+                                {{person.LastName}}
+                            </th>
+                            <th>
+                                {{person.FirstName}}
+                            </th>
+                            <th>
+                                {{person.MiddleName}}
+                            </th>
+                            <th>
+                                {{person.Degree}}
+                            </th>
+                            <th ng-show="searchFilter.selectedCategory > 1 && searchFilter.selectedCategory <= 3 && searchFilter.IsFormer == 1">
+                                {{person.YearGraduation}}
+                            </th>
+                            <th ng-show="searchFilter.selectedCategory > 0 && searchFilter.selectedCategory <= 4 && searchFilter.IsFormer == 0">
+                                {{person.Title}}
+                            </th>
+                            <th ng-show="searchFilter.selectedCategory > 4 || searchFilter.IsFormer == 1">
+                                {{person.City}}
+                            </th>
+                            <th ng-show="searchFilter.selectedCategory > 4 || searchFilter.IsFormer == 1">
+                                {{person.State}}
+                            </th>
+                            <th ng-show="searchFilter.selectedCategory > 4 || searchFilter.IsFormer == 1">
+                                {{person.IsDeceased}}
+                            </th>
+                            <!--<th>
+                                {{person.SponseInFCM}}
+                            </th>-->
+                          
+                        </tr>
+                    </tbody>
+                </table>
+
+            </fieldset>
+        </div>
+
+        <div id="PersonInfo" class="hide modalFileInfo" role="dialog">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">X</button>
+                <table style="width:1100px">
+                    <tr>
+                        <td>
+                            <h4 class="text-left"> Add/Edit a person </h4>
+                        </td>
+                        <td style="text-align:right">
+                            <div>
+                                <input type="button" class="btn btn-primary" ng-click="SavePersonInfo()" value="Save" ng-disabled="newAccount.$invalid" />
+                                <input type="button" class="btn btn-primary" ng-click="InactivePerson()" value="Delete" ng-disabled="selectedPersonInfo.personid==null" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-body" style="max-height:500px; overflow-x:hidden;">
+                <div class="tab-content">
+                    <div id="AddPerson">
+                        <div id="personalInfo" class="" ng-form="CreateAccountForm" name="newAccount">
+                            <div class="offset10 ">
+                                <!--<input type="button" class="btn btn-primary" ng-click="SavePersonInfo()" value="Save" ng-disabled="newAccount.$invalid" /> <!--ng-disabled="newAccount.$invalid || nameExist"-->
+                                <!--<input type="button" class="btn btn-primary" ng-click="ResetToAddNewPerson()" value="Reset To Add New Person" ng-disabled="isDisabled" />-->
+                                <!--<input type="button" class="btn btn-primary" ng-click="InactivePerson()" value="Delete" ng-disabled="selectedPersonInfo.personid==null" />-->
+                            </div>
+                            <div id="SaveInfo" class="alert-success " style="width:300px; opacity:0; float:right">
+                                <span class="close" data-dismiss="alert">&times;</span>
+                                <span><strong>Success!</strong> You have successfully saved your information.</span>
+                            </div>
+                            <div>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <label>First Name</label>
+                                            <input type="text" required ng-model="selectedPersonInfo.FirstName" class="form-control col-xs-2" placeholder="Required *" />
+                                        </td>
+                                        <td style="padding-left: 43px;">
+                                            <label>Middle Name</label>
+                                            <input type="text" ng-model="selectedPersonInfo.MiddleName" class="form-control col-xs-2" />
+                                        </td>
+                                        <td style="padding-left: 45px;">
+                                            <label>Last Name</label>
+                                            <input type="text" required ng-model="selectedPersonInfo.LastName" class="form-control col-xs-2" placeholder="Required *" />
+                                        </td>
+                                        <td style="padding-left: 45px;">
+                                            <label>Preferred Name</label>
+                                            <input type="text" ng-model="selectedPersonInfo.preferredName" class="form-control col-xs-2" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <label>Significant Other</label>
+                                            <select id="SigOther" name="SigOther" ng-options=" item.PersonId as item.PersonName for item in FullPersonList"
+                                                    ng-model="selectedPersonInfo.PartnerPersonId">
+                                                <option value="" ng-selected="">-- Select person ---</option>
+                                            </select>
+                                        </td>
+                                        <td style="padding-left: 30px;">
+                                            <label>Sex</label>
+                                            <select id="ddlsex" name="Sex" ng-options="item.SexId as item.Sex for item in sexes" ng-model="selectedPersonInfo.SexId">
+                                                <option value="">-- Select Sex --</option>
+                                            </select>
+                                        </td>
+                                        <td style="padding-left: 30px;">
+                                            <label>Degree</label>
+                                            <input type="text" ng-model="selectedPersonInfo.EducationInfo" class="form-control col-xs-2" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <label>Email</label>
+                                            <input type="email" ng-model="selectedPersonInfo.EmailAddress" class="form-control col-xs-2" />
+                                        </td>
+                                        <td style="padding-left: 30px;">
+                                            <label>Alter Email</label>
+                                            <input type="email" ng-model="selectedPersonInfo.AlterEmailAddress" class="form-control col-xs-2" />
+                                        </td>
+                                        <td style="padding-left: 30px;">
+                                            <label class="newOrderInput">MU Pawprint</label>
+                                            <input name="tel" type="text" class="col-xs-2"
+                                                   ng-model="selectedPersonInfo.pawprint" />
+                                        </td>
+                                        <td style="padding-left: 30px;">
+                                            <label class="newOrderInput">Employee ID</label>
+                                            <input name="tel" type="text" class="col-xs-2"
+                                                   ng-model="selectedPersonInfo.EmployeeID" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="newOrderInput">Home Phone</label>
+                                            <input name="tel" type="text" class=" col-xs-2" ng-pattern="/^(?:\d{10}|\w+@\w+\.\w{2,3})$/" placeholder="1234567890"
+                                                   ng-model="selectedPersonInfo.homephone" />
+                                        </td>
+                                        <td style="padding-left: 30px;">
+                                            <label class="newOrderInput">Work Phone</label>
+                                            <input name="tel" type="text" class=" col-xs-2" ng-pattern="/^(?:\d{10}|\w+@\w+\.\w{2,3})$/" placeholder="1234567890"
+                                                   ng-model="selectedPersonInfo.workphone" />
+                                        </td>
+                                        <td style="padding-left: 30px;">
+                                            <label class="newOrderInput">Cell Phone</label>
+                                            <input name="tel" type="text" class=" col-xs-2" ng-pattern="/^(?:\d{10}|\w+@\w+\.\w{2,3})$/" placeholder="1234567890"
+                                                   ng-model="selectedPersonInfo.cellphone" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label class="newOrderInput">Note</label>
+                                            <textarea name="Note" ng-model="selectedPersonInfo.Note" maxlength="500"></textarea>
+                                        </td>
+
+                                        <td style="padding-left: 30px;">
+                                            <label class="newOrderInput" style="width:100px">Is_Deceased</label>
+                                            <input id="IsDeceased" type="checkbox" style="height: 40px;"
+                                                   ng-model="selectedPersonInfo.IsDeceased" />
+                                        </td>
+                                        <td style="padding-left: 30px;">
+                                            <label class="newOrderInput" style="width:100px">Do not Solicit</label>
+                                            <input id="IsNonSolicit" type="checkbox" style="height: 40px;"
+                                                   ng-model="selectedPersonInfo.IsNonSolicit" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div>
+                                    <input type="button" class="btn btn-info" ng-click="addNewAddress()" value="ADD New Address">
+                                    <div>
+                                        <fieldset class="fa-border row-fluid  " style="height: auto; width: 75%" name="HomeAddress" data-ng-repeat="personAddressInfo in selectedpersonAddressInfo track by $index">
+                                            <legend class=" fa-border colorGrey " style="width: 300px;"><strong>Address</strong></legend>
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <label class="newOrderInput">Address Type</label>
+                                                        <select id="AddressType" name="AddressType" required ng-options=" item.AddressTypeId as item.Type for item in personAddressType | filter:personAddressfilter($index)" ng-model="personAddressInfo.AddressTypeId">
+                                                            <option value="">-- Select Address Type ---</option>
+                                                        </select>
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">Preferred Mailing Address?</label>
+                                                        <input id="IsPreferredAddress" type="checkbox" style="height: 40px;"
+                                                               ng-model="personAddressInfo.IsPreferred" />
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">IsDeleted</label>
+                                                        <input id="IsDeleted" type="checkbox" style="height: 40px;"
+                                                               ng-model="personAddressInfo.IsDeleted" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label class="newOrderInput">Address line 1</label>
+                                                        <input name="addr1" type="text" class="input-large"
+                                                               ng-model="personAddressInfo.Street1" />
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">Address line 2</label>
+                                                        <input name="addr2" type="text" class="input-large"
+                                                               ng-model="personAddressInfo.Street2">
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">Address line 3</label>
+                                                        <input name="addr3" type="text" class="input-large"
+                                                               ng-model="personAddressInfo.Street3">
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label class="newOrderInput">City</label>
+                                                        <input name="City" type="text" class="form-control input-large"
+                                                               ng-model="personAddressInfo.City" />
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">State/Province/Region</label>
+                                                        <select id="ddlState1" name="State" ng-options=" state.stateid as state.state_cd for state in usstate " ng-model="personAddressInfo.StateId">
+                                                            <option value="">-- Select State ---</option>
+                                                        </select>
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">ZIP</label>
+                                                        <input name="zip" type="text" class="form-control input-large"
+                                                               ng-model="personAddressInfo.PostalCode">
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">Country</label>
+                                                        <input name="country" type="text" class="form-control input-large"
+                                                               ng-model="personAddressInfo.country">
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div>
+                                    <input type="button" class="btn btn-info" ng-click="addNewPersonCategory()" value="ADD New Role">
+                                    <div>
+                                        <fieldset class="fa-border row-fluid" style="height: auto; width: 80%" data-ng-repeat="personCategoryInfo in selectedpersonCategoryInfo track by $index">
+                                            <legend class=" fa-border colorGrey " style="width: 300px;"><strong>Person Category</strong></legend>
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <label><b>Former?</b></label>
+                                                        <input type="checkbox" style="height: 20px; margin-left: 15px; margin-bottom: 15px; " ng-model="personCategoryInfo.IsFormer" />
+                                                    </td>
+                                                    <td>
+                                                        <label class="newOrderInput">Person Category</label>
+                                                        <select id="personCategory" name="personCategory" required ng-options=" item.PersonCategoryCD as item.PersonCategoryName for item in personCategory | filter:personCategoryfilter($index)" ng-model="personCategoryInfo.PersonCategoryCD">
+                                                            <option value="">-- Select Person Category ---</option>
+                                                        </select>
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">Title</label>
+                                                        <select id="title" name="title" ng-options=" item.TitleId as item.Title for item in TitleList" ng-model="personCategoryInfo.TitleId">
+                                                            <option value="">-- Select Title ---</option>
+                                                        </select>
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">Note</label>
+                                                        <!--<input name="Note" type="text" class="form-control input-xlarge"
+                                                ng-model="personCategoryInfo.Note" />-->
+                                                        <textarea name="Note" ng-model="personCategoryInfo.Note" maxlength="300"></textarea>
+                                                    </td>
+
+                                                </tr>
+                                                <tr id="Faculty" ng-show="personCategoryInfo.PersonCategoryCD == 1">
+                                                    <td></td>
+                                                    <td>
+                                                        <label class="newOrderInput">Start Date</label>
+                                                        <input type="date" ng-model="personCategoryInfo.EffectiveDate" />
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">Term Date</label>
+                                                        <input type="date" ng-model="personCategoryInfo.TermDate" />
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">Assistant Person</label>
+                                                        <select id="AssistantPerson" name="AssistantPerson" ng-options=" item.PersonId as item.PersonName for item in AssistantPersonList " ng-model="personCategoryInfo.AssistantPersonId">
+                                                            <option value="">-- Select Assistant Person ---</option>
+                                                        </select>
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">Position</label>
+                                                        <input name="Position" type="text" class="form-control input-large"
+                                                               ng-model="personCategoryInfo.Position" />
+                                                    </td>
+                                                </tr>
+                                                <tr id="Fellow/Resident" ng-show="personCategoryInfo.PersonCategoryCD == 2 || personCategoryInfo.PersonCategoryCD == 3">
+                                                    <td></td>
+                                                    <td>
+                                                        <label class="newOrderInput">Fel/Res Partner</label>
+                                                        <select id="Partner" name="Partner" ng-options=" item.PersonId as item.PersonName for item in FullPersonList" ng-model="personCategoryInfo.PartnerPersonId">
+                                                            <option value="">-- Select Person Name ---</option>
+                                                        </select>
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">Year Graduation</label>
+                                                        <input name="YearGraduation" type="text" class="form-control input-small"
+                                                               ng-model="personCategoryInfo.YearGraduation" />
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">Fellow Specification</label>
+                                                        <input name="Specification" type="text" class="form-control input-large"
+                                                               ng-model="personCategoryInfo.FellowSpecification" />
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput" style="width:150px">Did not finish program</label>
+                                                        <input id="DoNotFinishProgram" type="checkbox" style="height: 40px;"
+                                                               ng-model="personCategoryInfo.DoNotFinishProgram" />
+                                                    </td>
+                                                    <td style="padding-left: 10px;">
+                                                        <label class="newOrderInput" style="width:150px">Integrated Resident</label>
+                                                        <input id="Board_Cert" type="checkbox" style="height: 40px;"
+                                                               ng-model="personCategoryInfo.IsIntegratedResident" />
+                                                    </td>
+                                                </tr>
+
+                                                <tr id="AllenFriends" ng-show="personCategoryInfo.PersonCategoryCD == 6">
+                                                    <td></td>
+                                                    <td>
+                                                        <label class="newOrderInput">Designation</label>
+                                                        <select id="Designation" name="Designation" ng-options=" item.DesignationCD as item.DesignationName for item in DesignationList" ng-model="personCategoryInfo.DesignationCD">
+                                                            <option value="">-- Select Designation ---</option>
+                                                        </select>
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">Year Of Last Gift</label>
+                                                        <input name="YearOfLastGift" type="text" class="form-control input-small"
+                                                               ng-model="personCategoryInfo.YearOfLastGift" />
+                                                    </td>
+                                                    <td style="padding-left: 30px;">
+                                                        <label class="newOrderInput">Total Donation</label>
+                                                        <input name="TotalDonation" type="text" class="form-control input-small"
+                                                               ng-model="personCategoryInfo.TotalDonation" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div id="ClinicList" style="margin-left:58px" ng-show="personCategoryInfo.PersonCategoryCD >= 1 && personCategoryInfo.PersonCategoryCD <= 4" ng-init="PersonCategoryClinicInit(personCategoryInfo)">
+                                                Clinics:
+                                                <table>
+                                                    <tr>
+                                                        <td style="width:30px" ng-repeat="item in ClinicList">
+                                                            <input type="checkbox" style="width:30px" ng-model="(personCategoryInfo.ClinicLists)[item.ClinicCD]" />&nbsp&nbsp{{item.ClinicName}}&nbsp&nbsp
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </fieldset>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </div>
+
+    
+</body>
+</html>

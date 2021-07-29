@@ -1,18 +1,18 @@
 # SampleCodesForUMICH
 T-sql samples are in Person.cs, I have listed some important ones for DB insert, delete, update and search
-  InsertPerson
-  InsertPersonDepartmentPersonCategory
+      InsertPerson
+      InsertPersonDepartmentPersonCategory
 
-  InactivePerson
+      InactivePerson
 
-  UpdatePersonTable
-  UpdatePersonAddress
-  UpdatePersonCategoryInfo
+      UpdatePersonTable
+      UpdatePersonAddress
+      UpdatePersonCategoryInfo
 
-  GetPersonListByDepartment
-  GetSelectedpersonInfo
-  GetSelectedpersonAddressInfo
-  GetSelectedpersonCategoryInfo
+      GetPersonListByDepartment
+      GetSelectedpersonInfo
+      GetSelectedpersonAddressInfo
+      GetSelectedpersonCategoryInfo
 
 HTML samples are in PersonMgmt.html, some are AngularJs embedded. 
 

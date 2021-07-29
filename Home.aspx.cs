@@ -220,36 +220,36 @@ namespace SOMDeptAdministration
             return SOMDepartmentBusinessAdministrationBL.Person.SearchIDXProvNumByName(lname, fname);
         }
         
-		/**
-		* Returns person List string or Error Msg string to show if the function has proceeded successfully. 
-		* <p>
-		* This method will return immediately, if Add/Edit person successfully or it stops at anywhere that has an error with msg. 
-		* It received data from http post.
-		*
-		* @param  fname  
-		* @param  mname 	
-		* @param  lname  
-		* @param  preferredName	
-		* @param  personId 	 0 if it is new person
-		* @param  departmentTitleId	
-		* @param  SalutationId	
-		* @param  EducationInfo		
-		* @param  sexId		
-		* @param  email			
-		* @param  alteremail
-		* @param  pawprint	
-		* @param  EmployeeID	
-		* @param  homephone	
-		* @param  workphone	
-		* @param  cellphone	
-		* @param  PartnerPersonId	
-		* @param  Note	
-		* @param  IsDeceased	
-		* @param  IsNonSolicit			
-		* @param  AddressInfo	received from JS obj
-		* @param  CategoryInfo	
-		* @return  Error msg or personList string
-		*/
+	/**
+	* Returns person List string or Error Msg string to show if the function has proceeded successfully. 
+	* <p>
+	* This method will return immediately, if Add/Edit person successfully or it stops at anywhere that has an error with msg. 
+	* It received data from http post.
+	*
+	* @param  fname  
+	* @param  mname 	
+	* @param  lname  
+	* @param  preferredName	
+	* @param  personId 	 0 if it is new person
+	* @param  departmentTitleId	
+	* @param  SalutationId	
+	* @param  EducationInfo		
+	* @param  sexId		
+	* @param  email			
+	* @param  alteremail
+	* @param  pawprint	
+	* @param  EmployeeID	
+	* @param  homephone	
+	* @param  workphone	
+	* @param  cellphone	
+	* @param  PartnerPersonId	
+	* @param  Note	
+	* @param  IsDeceased	
+	* @param  IsNonSolicit			
+	* @param  AddressInfo	received from JS obj
+	* @param  CategoryInfo	
+	* @return  Error msg or personList string
+	*/
         [WebMethod]
         public static string SavePersonInfo(string fname, string mname, string lname, string preferredName, int personId, int departmentTitleId, int SalutationId,
             string EducationInfo, int sexId, string email, string alteremail, string pawprint, string EmployeeID, string homephone, string workphone, string cellphone, 
